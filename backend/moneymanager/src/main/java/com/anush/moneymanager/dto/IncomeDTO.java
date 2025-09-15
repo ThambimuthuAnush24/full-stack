@@ -1,56 +1,29 @@
-package com.anush.moneymanager.entity;
+package com.anush.moneymanager.dto;
 
-import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.util.Date;
 
-@Entity
-@Table(name = "incomes")
-public class Income {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class IncomeDTO {
     private Long id;
 
     @NotNull(message = "Amount is required")
     @Min(value = 0, message = "Amount must be positive")
-    @Column(nullable = false)
     private Double amount;
 
     @NotBlank(message = "Category is required")
     @Size(max = 50, message = "Category must be less than 50 characters")
-    @Column(nullable = false)
     private String category;
 
     @Size(max = 255, message = "Description must be less than 255 characters")
     private String description;
 
     @NotNull(message = "Date is required")
-    @Column(nullable = false)
-    @Temporal(TemporalType.DATE)
     private Date date;
 
     private String emoji;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
-
-    // Default constructor
-    public Income() {
-    }
-
-    // Parameterized constructor
-    public Income(Double amount, String category, String description, Date date, String emoji, User user) {
-        this.amount = amount;
-        this.category = category;
-        this.description = description;
-        this.date = date;
-        this.emoji = emoji;
-        this.user = user;
-    }
 
     // Getters and setters
     public Long getId() {
@@ -99,27 +72,5 @@ public class Income {
 
     public void setEmoji(String emoji) {
         this.emoji = emoji;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    // toString method for debugging
-    @Override
-    public String toString() {
-        return "Income{" +
-                "id=" + id +
-                ", amount=" + amount +
-                ", category='" + category + '\'' +
-                ", description='" + description + '\'' +
-                ", date=" + date +
-                ", emoji='" + emoji + '\'' +
-                ", user=" + (user != null ? user.getId() : "null") +
-                '}';
     }
 }

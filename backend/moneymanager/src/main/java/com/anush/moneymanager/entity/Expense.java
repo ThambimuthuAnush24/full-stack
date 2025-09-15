@@ -8,8 +8,8 @@ import jakarta.validation.constraints.Size;
 import java.util.Date;
 
 @Entity
-@Table(name = "incomes")
-public class Income {
+@Table(name = "expenses")
+public class Expense {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -28,8 +28,8 @@ public class Income {
     private String description;
 
     @NotNull(message = "Date is required")
-    @Column(nullable = false)
     @Temporal(TemporalType.DATE)
+    @Column(nullable = false)
     private Date date;
 
     private String emoji;
@@ -39,11 +39,11 @@ public class Income {
     private User user;
 
     // Default constructor
-    public Income() {
+    public Expense() {
     }
 
     // Parameterized constructor
-    public Income(Double amount, String category, String description, Date date, String emoji, User user) {
+    public Expense(Double amount, String category, String description, Date date, String emoji, User user) {
         this.amount = amount;
         this.category = category;
         this.description = description;
@@ -109,10 +109,9 @@ public class Income {
         this.user = user;
     }
 
-    // toString method for debugging
     @Override
     public String toString() {
-        return "Income{" +
+        return "Expense{" +
                 "id=" + id +
                 ", amount=" + amount +
                 ", category='" + category + '\'' +
