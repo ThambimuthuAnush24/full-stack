@@ -89,7 +89,7 @@ public class AuthController {
             return ResponseEntity.badRequest().body("Registration failed: " + e.getMessage());
         }
     }
-
+    
     @GetMapping("/me")
     public ResponseEntity<?> getCurrentUser(Principal principal) {
         try {
