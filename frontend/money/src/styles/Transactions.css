@@ -1,0 +1,126 @@
+.transactions-container {
+  padding: 20px;
+}
+
+.transactions-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.transactions-header h1 {
+  margin: 0;
+  color: var(--dark-color);
+}
+
+.filter-section {
+  background-color: white;
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  padding: 15px;
+  margin-bottom: 20px;
+}
+
+.summary-total {
+  background-color: white;
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  padding: 15px;
+  margin-bottom: 20px;
+}
+
+.summary-total h3 {
+  margin: 0;
+  color: var(--dark-color);
+  font-size: 1.2rem;
+}
+
+.transactions-table {
+  background-color: white;
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  padding: 20px;
+  overflow-x: auto;
+}
+
+.no-data {
+  background-color: white;
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  padding: 40px 20px;
+  text-align: center;
+}
+
+.no-data p {
+  margin-bottom: 20px;
+  color: var(--gray-color);
+}
+
+/* Table styles */
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+thead {
+  background-color: rgba(0, 0, 0, 0.02);
+}
+
+th, td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+th {
+  font-weight: 600;
+  color: var(--dark-color);
+}
+
+tbody tr {
+  transition: var(--transition);
+}
+
+tbody tr:hover {
+  background-color: rgba(0, 0, 0, 0.02);
+}
+
+.amount {
+  font-weight: 600;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+}
+
+.edit-btn, .delete-btn {
+  background: none;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+}
+
+.edit-btn {
+  color: var(--primary-color);
+}
+
+.edit-btn:hover {
+  background-color: rgba(108, 92, 231, 0.1);
+}
+
+.delete-btn {
+  color: var(--danger-color);
+}
+
+.delete-btn:hover {
+  background-color: rgba(214, 48, 49, 0.1);
+}
