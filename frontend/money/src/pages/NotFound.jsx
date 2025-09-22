@@ -1,7 +1,9 @@
-import { Navigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { FaExclamationTriangle } from 'react-icons/fa';
 
 const NotFound = () => {
+  const navigate = useNavigate();
+  
   return (
     <div className="not-found">
       <div className="not-found-content">
@@ -10,7 +12,7 @@ const NotFound = () => {
         <h2>Page Not Found</h2>
         <p>The page you are looking for does not exist or has been moved.</p>
         <button 
-          onClick={() => <Navigate to="/dashboard" replace />}
+          onClick={() => navigate('/dashboard')}
           className="btn-primary"
         >
           Go to Dashboard
