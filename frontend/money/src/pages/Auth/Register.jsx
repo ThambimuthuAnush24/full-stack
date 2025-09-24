@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../context/AuthContext.jsx';
 import '../../styles/Auth.css';
 
 const Register = () => {
@@ -28,8 +28,12 @@ const Register = () => {
     e.preventDefault();
     setIsLoading(true);
     
+    // Log the data being sent
+    console.log('Registering with data:', formData);
+    
     try {
-      await register(formData);
+      const result = await register(formData);
+      console.log('Registration result:', result);
       navigate('/login', { state: { message: 'Registration successful! Please log in.' } });
     } catch (error) {
       console.error('Registration error:', error);

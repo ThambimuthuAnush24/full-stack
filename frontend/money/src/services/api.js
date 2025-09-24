@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:8080/api';
+// Use the proxy URL for development (relative path)
+const API_URL = '/api';
 
 // Create axios instance with base configuration
 const api = axios.create({
@@ -8,6 +9,7 @@ const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
+  withCredentials: false,
 });
 
 // Add interceptor to add token to requests
@@ -27,8 +29,11 @@ export const authService = {
   login: (loginRequest) => 
     api.post('/auth/login', loginRequest),
     
-  register: (registerRequest) => 
-    api.post('/auth/register', registerRequest),
+  register: (registerRequest) => {
+    console.log('Sending registration request to:', API_URL + '/auth/register');
+    console.log('With data:', registerRequest);
+    return api.post('/auth/register', registerRequest);
+  },
     
   getCurrentUser: () => 
     api.get('/user/me'),

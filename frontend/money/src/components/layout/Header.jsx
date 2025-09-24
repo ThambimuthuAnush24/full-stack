@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../context/AuthContext.jsx';
 import { Link } from 'react-router-dom';
 import { FaUserCircle, FaBell, FaSignOutAlt, FaCog } from 'react-icons/fa';
 

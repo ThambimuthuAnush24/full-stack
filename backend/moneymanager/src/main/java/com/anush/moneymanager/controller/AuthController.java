@@ -17,6 +17,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.security.Principal;
 import java.util.HashMap;
@@ -24,6 +26,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/auth")
+@CrossOrigin(origins = { "http://localhost:5173", "http://127.0.0.1:5173" }, allowCredentials = "true")
 public class AuthController {
 
     @Autowired
@@ -89,7 +92,7 @@ public class AuthController {
             return ResponseEntity.badRequest().body("Registration failed: " + e.getMessage());
         }
     }
-    
+
     @GetMapping("/me")
     public ResponseEntity<?> getCurrentUser(Principal principal) {
         try {
