@@ -32,9 +32,26 @@ const Register = () => {
     console.log('Registering with data:', formData);
     
     try {
-      const result = await register(formData);
-      console.log('Registration result:', result);
-      navigate('/login', { state: { message: 'Registration successful! Please log in.' } });
+      // Use direct axios call for debugging
+      const axios = await import('axios');
+      
+      console.log('Making direct API call to register');
+      
+      try {
+        // First try the direct approach
+        const directResult = await axios.default.post('http://localhost:8080/api/auth/register', formData, {
+          headers: { 'Content-Type': 'application/json' }
+        });
+        console.log('Direct registration successful:', directResult.data);
+        navigate('/login', { state: { message: 'Registration successful! Please log in.' } });
+        return;
+      } catch (directError) {
+        console.error('Direct registration failed, trying through context:', directError);
+        // Fall back to using the context
+        const result = await register(formData);
+        console.log('Registration result through context:', result);
+        navigate('/login', { state: { message: 'Registration successful! Please log in.' } });
+      }
     } catch (error) {
       console.error('Registration error:', error);
     } finally {

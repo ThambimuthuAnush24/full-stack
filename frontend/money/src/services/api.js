@@ -1,13 +1,15 @@
 import axios from 'axios';
 
-// Use the proxy URL for development (relative path)
-const API_URL = '/api';
+// For development, we'll use the backend URL directly
+const BACKEND_URL = 'http://localhost:8080';
+const API_URL = `${BACKEND_URL}/api`;
 
 // Create axios instance with base configuration
 const api = axios.create({
   baseURL: API_URL,
   headers: {
     'Content-Type': 'application/json',
+    'Accept': 'application/json',
   },
   withCredentials: false,
 });
