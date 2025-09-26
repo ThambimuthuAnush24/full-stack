@@ -1,20 +1,26 @@
 import React, { useState } from 'react';
 import { useAuth } from '../../context/AuthContext.jsx';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FaUserCircle, FaBell, FaSignOutAlt, FaCog } from 'react-icons/fa';
+import { toast } from 'react-toastify';
 
 const Header = () => {
   const { currentUser, logout } = useAuth();
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
+  const navigate = useNavigate();
 
   const toggleProfileDropdown = () => {
     setProfileDropdownOpen(!profileDropdownOpen);
   };
 
   const handleLogout = () => {
-    logout();
+    const result = logout();
+    // Show success message
+    toast.success('Logged out successfully');
     // Close dropdown after logout
     setProfileDropdownOpen(false);
+    // Redirect to login page
+    navigate('/login');
   };
 
   return (

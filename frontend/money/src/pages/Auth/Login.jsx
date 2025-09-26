@@ -1,6 +1,7 @@
-import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext.jsx';
+import { toast } from 'react-toastify';
 import '../../styles/Auth.css';
 
 const Login = () => {
@@ -11,6 +12,7 @@ const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { login, error } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -20,15 +22,40 @@ const Login = () => {
     });
   };
 
+  // Check for messages from other components (like registration success)
+  useEffect(() => {
+    if (location.state?.message) {
+      toast.success(location.state.message);
+      // Clean up the state to prevent showing the message again on refresh
+      navigate(location.pathname, { replace: true, state: {} });
+    }
+  }, [location, navigate]);
+
+  // Show error from context as toast
+  useEffect(() => {
+    if (error) {
+      toast.error(error);
+    }
+  }, [error]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
     
     try {
+      // Validate input
+      if (!credentials.username.trim() || !credentials.password.trim()) {
+        toast.error('Username and password are required');
+        return;
+      }
+      
+      // Attempt login
       await login(credentials.username, credentials.password);
+      toast.success('Login successful!');
       navigate('/dashboard');
     } catch (error) {
       console.error('Login error:', error);
+      // Error is already set in the context and will be displayed by the useEffect above
     } finally {
       setIsLoading(false);
     }

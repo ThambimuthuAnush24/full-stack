@@ -14,12 +14,18 @@ export const AuthProvider = ({ children }) => {
       
       if (token) {
         try {
+          console.log('Token found, loading user data...');
           const response = await authService.getCurrentUser();
+          console.log('User data loaded:', response.data);
           setCurrentUser(response.data);
         } catch (err) {
           console.error('Failed to load user:', err);
+          // Clear invalid token
           localStorage.removeItem('token');
+          setError('Session expired. Please login again.');
         }
+      } else {
+        console.log('No token found, user is not logged in');
       }
       
       setLoading(false);
@@ -32,11 +38,24 @@ export const AuthProvider = ({ children }) => {
     try {
       setError(null);
       const response = await authService.login({ username, password });
-      localStorage.setItem('token', response.data.token);
-      setCurrentUser(response.data.user);
+      console.log('Login response:', response.data);
+      
+      // The response should have token, username, email, id, and role
+      const { token, username: respUsername, email, id } = response.data;
+      localStorage.setItem('token', token);
+      
+      // Set current user with all the data from the response
+      setCurrentUser({
+        id,
+        username: respUsername,
+        email,
+        role: response.data.role
+      });
+      
       return response.data;
     } catch (err) {
-      setError(err.response?.data?.message || 'Login failed');
+      console.error('Login error details:', err);
+      setError(err.response?.data || 'Login failed');
       throw err;
     }
   };
@@ -55,6 +74,9 @@ export const AuthProvider = ({ children }) => {
   const logout = () => {
     localStorage.removeItem('token');
     setCurrentUser(null);
+    setError(null);
+    // This will be caught by our notification system and show a success message
+    return { success: true, message: 'Logged out successfully' };
   };
 
   const value = {

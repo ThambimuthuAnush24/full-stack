@@ -1,6 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext.jsx';
+import { toast } from 'react-toastify';
+import axios from 'axios';
 import '../../styles/Auth.css';
 
 const Register = () => {
@@ -24,36 +26,63 @@ const Register = () => {
     });
   };
 
+  // Show error from context as toast
+  useEffect(() => {
+    if (error) {
+      toast.error(error);
+    }
+  }, [error]);
+  
+  const validateForm = () => {
+    if (!formData.username.trim()) {
+      toast.error('Username is required');
+      return false;
+    }
+    if (!formData.password.trim()) {
+      toast.error('Password is required');
+      return false;
+    }
+    if (!formData.email.trim()) {
+      toast.error('Email is required');
+      return false;
+    }
+    if (!formData.firstName.trim() || !formData.lastName.trim()) {
+      toast.error('First name and last name are required');
+      return false;
+    }
+    
+    // Basic email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      toast.error('Please enter a valid email address');
+      return false;
+    }
+    
+    return true;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsLoading(true);
     
-    // Log the data being sent
-    console.log('Registering with data:', formData);
+    if (!validateForm()) {
+      return;
+    }
+    
+    setIsLoading(true);
+    toast.info('Creating your account...', { autoClose: 2000 });
     
     try {
-      // Use direct axios call for debugging
-      const axios = await import('axios');
-      
-      console.log('Making direct API call to register');
-      
-      try {
-        // First try the direct approach
-        const directResult = await axios.default.post('http://localhost:8080/api/auth/register', formData, {
-          headers: { 'Content-Type': 'application/json' }
-        });
-        console.log('Direct registration successful:', directResult.data);
-        navigate('/login', { state: { message: 'Registration successful! Please log in.' } });
-        return;
-      } catch (directError) {
-        console.error('Direct registration failed, trying through context:', directError);
-        // Fall back to using the context
-        const result = await register(formData);
-        console.log('Registration result through context:', result);
-        navigate('/login', { state: { message: 'Registration successful! Please log in.' } });
-      }
+      // Use our authService API
+      const result = await register(formData);
+      toast.success('Registration successful!');
+      navigate('/login', { state: { message: 'Account created successfully! Please log in.' } });
     } catch (error) {
       console.error('Registration error:', error);
+      if (error.response?.data) {
+        toast.error(`Registration failed: ${error.response.data}`);
+      } else {
+        toast.error('Registration failed. Please try again later.');
+      }
     } finally {
       setIsLoading(false);
     }

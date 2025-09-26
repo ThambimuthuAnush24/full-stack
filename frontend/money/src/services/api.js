@@ -26,19 +26,70 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
+// Add response interceptor to handle common errors
+api.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  (error) => {
+    console.log('API Error interceptor:', error);
+    
+    if (error.response) {
+      // Server responded with a status code outside the 2xx range
+      console.log('Error data:', error.response.data);
+      console.log('Error status:', error.response.status);
+      
+      // Handle specific status codes
+      if (error.response.status === 401) {
+        // Unauthorized - clear token and redirect to login if needed
+        console.log('Unauthorized access, clearing token');
+        localStorage.removeItem('token');
+        // We could redirect to login here if needed
+      }
+    } else if (error.request) {
+      // The request was made but no response was received
+      console.log('No response received:', error.request);
+    } else {
+      // Something happened in setting up the request that triggered an error
+      console.log('Request error:', error.message);
+    }
+    
+    return Promise.reject(error);
+  }
+);
+
 // Authentication services
 export const authService = {
-  login: (loginRequest) => 
-    api.post('/auth/login', loginRequest),
+  login: (loginRequest) => {
+    console.log('Sending login request to:', API_URL + '/auth/login');
+    console.log('With credentials:', { username: loginRequest.username, password: '******' });
+    return api.post('/auth/login', loginRequest)
+      .catch(error => {
+        // Enhanced error logging
+        console.error('Login API error:', error.response || error);
+        throw error;
+      });
+  },
     
   register: (registerRequest) => {
     console.log('Sending registration request to:', API_URL + '/auth/register');
-    console.log('With data:', registerRequest);
-    return api.post('/auth/register', registerRequest);
+    console.log('With data:', { ...registerRequest, password: '******' });
+    return api.post('/auth/register', registerRequest)
+      .catch(error => {
+        // Enhanced error logging
+        console.error('Register API error:', error.response || error);
+        throw error;
+      });
   },
     
-  getCurrentUser: () => 
-    api.get('/user/me'),
+  getCurrentUser: () => {
+    console.log('Getting current user info');
+    return api.get('/auth/me')
+      .catch(error => {
+        console.error('Get current user error:', error.response || error);
+        throw error;
+      });
+  },
 };
 
 // User profile services

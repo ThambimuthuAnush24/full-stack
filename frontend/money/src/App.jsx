@@ -2,6 +2,8 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext.jsx';
 import ProtectedRoute from './components/ProtectedRoute';
 import Layout from './components/layout/Layout';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 // Pages
 import Login from './pages/Auth/Login';
@@ -21,6 +23,8 @@ import './App.css';
 function App() {
   return (
     <AuthProvider>
+      <ToastContainer position="top-right" autoClose={5000} hideProgressBar={false} 
+        newestOnTop={true} closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover />
       <Routes>
         {/* Public Routes */}
         <Route path="/login" element={<Login />} />
