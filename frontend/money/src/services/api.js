@@ -63,10 +63,53 @@ export const authService = {
   login: (loginRequest) => {
     console.log('Sending login request to:', API_URL + '/auth/login');
     console.log('With credentials:', { username: loginRequest.username, password: '******' });
+    
     return api.post('/auth/login', loginRequest)
+      .then(response => {
+        // Log successful response
+        console.log('Login success response structure:', response);
+        
+        // Check if the expected data is there
+        if (!response.data) {
+          console.error('Warning: Login response is missing data!');
+        } else if (!response.data.token) {
+          console.error('Warning: Login response is missing token!', response.data);
+          // Try to extract useful information
+          console.log('Response data keys:', Object.keys(response.data));
+        } else {
+          // Validate response structure
+          console.log('Token received:', response.data.token.substring(0, 20) + '...');
+          console.log('User data:', {
+            id: response.data.id,
+            username: response.data.username,
+            email: response.data.email,
+            role: response.data.role
+          });
+        }
+        
+        return response;
+      })
       .catch(error => {
         // Enhanced error logging
-        console.error('Login API error:', error.response || error);
+        console.error('Login API error:', error);
+        console.error('Response data:', error.response?.data);
+        console.error('Response status:', error.response?.status);
+        
+        // Try with a direct fetch call as a diagnostic
+        console.log('Trying direct fetch as diagnostic...');
+        fetch(`${BACKEND_URL}/api/auth/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(loginRequest)
+        }).then(res => {
+          console.log('Diagnostic fetch status:', res.status);
+          return res.text();
+        }).then(text => {
+          console.log('Diagnostic fetch response:', text);
+        }).catch(fetchError => {
+          console.error('Diagnostic fetch error:', fetchError);
+        });
+        
         throw error;
       });
   },
@@ -84,10 +127,18 @@ export const authService = {
     
   getCurrentUser: () => {
     console.log('Getting current user info');
+    
+    // First, try with the /me endpoint on auth controller
     return api.get('/auth/me')
       .catch(error => {
-        console.error('Get current user error:', error.response || error);
-        throw error;
+        console.error('Get current user error with /auth/me:', error);
+        
+        // If that fails, try the user controller endpoint as fallback
+        return api.get('/user/me')
+          .catch(secondError => {
+            console.error('Get current user error with /user/me:', secondError);
+            throw secondError;
+          });
       });
   },
 };

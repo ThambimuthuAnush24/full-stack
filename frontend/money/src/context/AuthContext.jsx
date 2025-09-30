@@ -15,8 +15,32 @@ export const AuthProvider = ({ children }) => {
       if (token) {
         try {
           console.log('Token found, loading user data...');
+          // First try decoding the token to get basic user info
+          // This helps us immediately establish authentication even if the API call fails
+          try {
+            const base64Url = token.split('.')[1];
+            const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+            const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+              return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+            }).join(''));
+            
+            const payload = JSON.parse(jsonPayload);
+            console.log('JWT payload:', payload);
+            
+            // Set basic user info from token
+            if (payload.sub) {
+              setCurrentUser({
+                username: payload.sub,
+                // Other fields will be filled from API response
+              });
+            }
+          } catch (jwtError) {
+            console.error('Error parsing JWT token:', jwtError);
+          }
+          
+          // Then get full user details from API
           const response = await authService.getCurrentUser();
-          console.log('User data loaded:', response.data);
+          console.log('User data loaded from API:', response.data);
           setCurrentUser(response.data);
         } catch (err) {
           console.error('Failed to load user:', err);
@@ -40,8 +64,10 @@ export const AuthProvider = ({ children }) => {
       const response = await authService.login({ username, password });
       console.log('Login response:', response.data);
       
-      // The response should have token, username, email, id, and role
-      const { token, username: respUsername, email, id } = response.data;
+      // Extract data from response
+      const { token, id, username: respUsername, email, role } = response.data;
+      
+      // Store token in localStorage
       localStorage.setItem('token', token);
       
       // Set current user with all the data from the response
@@ -49,13 +75,27 @@ export const AuthProvider = ({ children }) => {
         id,
         username: respUsername,
         email,
-        role: response.data.role
+        role
       });
       
+      console.log('User authenticated successfully:', respUsername);
       return response.data;
     } catch (err) {
       console.error('Login error details:', err);
-      setError(err.response?.data || 'Login failed');
+      
+      // More detailed error handling
+      if (err.response) {
+        if (err.response.status === 401) {
+          setError('Invalid username or password');
+        } else {
+          setError(err.response.data || 'Login failed');
+        }
+      } else if (err.request) {
+        setError('No response from server. Please try again later.');
+      } else {
+        setError('Login failed. Please try again.');
+      }
+      
       throw err;
     }
   };

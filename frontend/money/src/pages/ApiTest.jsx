@@ -6,6 +6,10 @@ function ApiTest() {
   const [error, setError] = useState(null);
   const [directTestResult, setDirectTestResult] = useState('Not tested');
   const [proxyTestResult, setProxyTestResult] = useState('Not tested');
+  const [testCredentials, setTestCredentials] = useState({ 
+    username: '', 
+    password: '' 
+  });
   
   useEffect(() => {
     // Test the API health endpoint
@@ -77,10 +81,109 @@ function ApiTest() {
                   console.error('Registration test error:', err);
                 }
               }}
-              style={{ padding: '8px 16px', background: '#4CAF50', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
+              style={{ padding: '8px 16px', background: '#4CAF50', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', marginRight: '10px' }}
             >
               Test Direct Registration
             </button>
+            
+            <button 
+              onClick={async () => {
+                try {
+                  const token = localStorage.getItem('token');
+                  alert('Current token: ' + (token ? token.substring(0, 20) + '...' : 'No token found'));
+                } catch (err) {
+                  alert('Token check failed: ' + err.message);
+                }
+              }}
+              style={{ padding: '8px 16px', background: '#2196F3', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
+            >
+              Check Current Token
+            </button>
+          </div>
+          
+          <div style={{ marginTop: '20px', padding: '15px', border: '1px solid #ddd', borderRadius: '4px' }}>
+            <h4>Test Login</h4>
+            <div style={{ marginBottom: '10px' }}>
+              <input 
+                type="text" 
+                placeholder="Username" 
+                value={testCredentials.username}
+                onChange={(e) => setTestCredentials({...testCredentials, username: e.target.value})}
+                style={{ padding: '8px', marginRight: '10px', width: '200px' }}
+              />
+              <input 
+                type="password" 
+                placeholder="Password" 
+                value={testCredentials.password}
+                onChange={(e) => setTestCredentials({...testCredentials, password: e.target.value})}
+                style={{ padding: '8px', width: '200px' }}
+              />
+            </div>
+            <button 
+              onClick={async () => {
+                try {
+                  // First try with JSON content type
+                  try {
+                    const response = await axios.post('http://localhost:8080/api/auth/login', {
+                      username: testCredentials.username,
+                      password: testCredentials.password
+                    }, {
+                      headers: { 
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                      }
+                    });
+                    alert('Login successful! Response: ' + JSON.stringify(response.data));
+                    console.log('Full login response:', response);
+                    localStorage.setItem('token', response.data.token);
+                    document.getElementById('login-result').textContent = 'Success: ' + JSON.stringify(response.data, null, 2);
+                  } catch (axiosErr) {
+                    console.error('Axios attempt failed:', axiosErr);
+                    
+                    // Try with fetch API as a fallback
+                    const fetchResponse = await fetch('http://localhost:8080/api/auth/login', {
+                      method: 'POST',
+                      headers: {
+                        'Content-Type': 'application/json',
+                      },
+                      body: JSON.stringify({
+                        username: testCredentials.username,
+                        password: testCredentials.password
+                      })
+                    });
+                    
+                    const responseText = await fetchResponse.text();
+                    let data;
+                    try {
+                      data = JSON.parse(responseText);
+                    } catch (e) {
+                      data = responseText;
+                    }
+                    
+                    if (fetchResponse.ok) {
+                      alert('Fetch login successful! Response: ' + JSON.stringify(data));
+                      console.log('Fetch login response:', data);
+                      if (data.token) {
+                        localStorage.setItem('token', data.token);
+                      }
+                      document.getElementById('login-result').textContent = 'Success (fetch): ' + JSON.stringify(data, null, 2);
+                    } else {
+                      throw new Error(`Fetch error: ${fetchResponse.status} - ${responseText}`);
+                    }
+                  }
+                } catch (err) {
+                  alert('All login attempts failed: ' + err.message);
+                  console.error('Login test error:', err);
+                  document.getElementById('login-result').textContent = 'Error: ' + err.message;
+                }
+              }}
+              style={{ padding: '8px 16px', background: '#FF9800', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
+            >
+              Test Login
+            </button>
+            <div style={{ marginTop: '10px', padding: '10px', background: '#f5f5f5', borderRadius: '4px', maxHeight: '200px', overflow: 'auto' }}>
+              <pre id="login-result" style={{ margin: 0 }}>No login attempt yet</pre>
+            </div>
           </div>
         </div>
       </div>

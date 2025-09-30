@@ -14,13 +14,22 @@ const Header = () => {
   };
 
   const handleLogout = () => {
-    const result = logout();
-    // Show success message
-    toast.success('Logged out successfully');
-    // Close dropdown after logout
-    setProfileDropdownOpen(false);
-    // Redirect to login page
-    navigate('/login');
+    try {
+      const result = logout();
+      console.log('Logout result:', result);
+      
+      // Show success message
+      toast.success('Logged out successfully');
+      
+      // Close dropdown after logout
+      setProfileDropdownOpen(false);
+      
+      // Redirect to login page
+      navigate('/login');
+    } catch (error) {
+      console.error('Error during logout:', error);
+      toast.error('Error logging out');
+    }
   };
 
   return (
