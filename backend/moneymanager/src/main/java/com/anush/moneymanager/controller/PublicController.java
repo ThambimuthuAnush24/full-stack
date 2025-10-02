@@ -1,6 +1,8 @@
 package com.anush.moneymanager.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -57,7 +59,7 @@ public class PublicController {
 
         if (token != null && !token.isEmpty()) {
             try {
-                String username = jwtUtil.getUsernameFromToken(token);
+                String username = jwtUtil.extractUsername(token);
                 boolean isValid = jwtUtil.validateToken(token);
 
                 response.put("valid", isValid);
@@ -74,5 +76,21 @@ public class PublicController {
         }
 
         return response;
+    }
+
+    @PostMapping("/test-auth")
+    public ResponseEntity<?> testAuthentication(@RequestBody LoginRequest request) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            response.put("requestReceived", true);
+            response.put("username", request.getUsername());
+            response.put("passwordLength", request.getPassword().length());
+            response.put("timestamp", new java.util.Date().toString());
+
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            response.put("error", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
     }
 }
