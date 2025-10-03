@@ -3,6 +3,8 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import { expenseService, categoryService } from '../../services/api';
 import { FaSave, FaTimes } from 'react-icons/fa';
 import '../../styles/TransactionForm.css';
+import { toast } from 'react-toastify';
+import { getCategoryEmoji } from '../../utils/categoryUtils';
 
 const ExpenseForm = () => {
   const { id } = useParams();
@@ -12,23 +14,43 @@ const ExpenseForm = () => {
   const [formData, setFormData] = useState({
     date: new Date().toISOString().split('T')[0],
     category: '',
-    description: '',
     amount: '',
+    emoji: '💳', // Default emoji
   });
 
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [customCategory, setCustomCategory] = useState('');
 
   useEffect(() => {
     // Fetch categories
     const fetchCategories = async () => {
       try {
         const response = await categoryService.getCategories();
-        setCategories(response.data.filter(cat => cat.type === 'EXPENSE'));
+        if (response.data && response.data.expense) {
+          setCategories(response.data.expense);
+        } else {
+          // If no categories or incorrect format, create a default set
+          setCategories([
+            { name: 'Food', emoji: '🍔', color: '#fd7e14' },
+            { name: 'Housing', emoji: '🏠', color: '#dc3545' },
+            { name: 'Transportation', emoji: '🚗', color: '#6610f2' },
+            { name: 'Shopping', emoji: '🛍️', color: '#20c997' },
+            { name: 'Other', emoji: '📋', color: '#6c757d' }
+          ]);
+        }
       } catch (err) {
         console.error('Error fetching categories:', err);
         setError('Failed to load categories');
+        // Set default categories on error
+        setCategories([
+          { name: 'Food', emoji: '🍔', color: '#fd7e14' },
+          { name: 'Housing', emoji: '🏠', color: '#dc3545' },
+          { name: 'Transportation', emoji: '🚗', color: '#6610f2' },
+          { name: 'Shopping', emoji: '🛍️', color: '#20c997' },
+          { name: 'Other', emoji: '📋', color: '#6c757d' }
+        ]);
       }
     };
 
@@ -48,8 +70,8 @@ const ExpenseForm = () => {
           setFormData({
             date: formattedDate,
             category: expense.category,
-            description: expense.description,
             amount: expense.amount,
+            emoji: expense.emoji || '💳', // Use the emoji if available, otherwise default
           });
           
           setError(null);
@@ -67,9 +89,42 @@ const ExpenseForm = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+    
+    if (name === 'category' && value === 'custom') {
+      // For custom category, just update the form data
+      setFormData({
+        ...formData,
+        [name]: value,
+      });
+    } else {
+      // For regular field updates, apply automatic emoji if it's the category field
+      const updates = { [name]: value };
+      
+      // Auto-assign emoji if this is a category change
+      if (name === 'category') {
+        // Find the matching category from our list
+        const categoryObj = categories.find(cat => cat.name === value);
+        if (categoryObj && categoryObj.emoji) {
+          updates.emoji = categoryObj.emoji;
+        }
+      }
+      
+      setFormData({
+        ...formData,
+        ...updates
+      });
+    }
+  };
+  
+  const handleCustomCategoryChange = (e) => {
+    const value = e.target.value;
+    setCustomCategory(value);
+    
+    // Auto-update the emoji based on the custom category text
+    const suggestedEmoji = getCategoryEmoji(value, 'expense');
     setFormData({
       ...formData,
-      [name]: value,
+      emoji: suggestedEmoji
     });
   };
 
@@ -78,20 +133,32 @@ const ExpenseForm = () => {
     setLoading(true);
 
     try {
+      let finalCategory = formData.category;
+      
+      // Handle custom category if selected
+      if (formData.category === 'custom' && customCategory.trim()) {
+        finalCategory = customCategory.trim();
+      }
+      
       const payload = {
         ...formData,
+        category: finalCategory,
         amount: parseFloat(formData.amount),
       };
 
       if (isEditing) {
         await expenseService.update(id, payload);
+        toast.success('Expense updated successfully!');
       } else {
         await expenseService.create(payload);
+        toast.success('Expense added successfully!');
       }
 
-      navigate('/expense');
+      navigate('/'); // Redirect to home screen
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to save expense');
+      const errorMessage = err.response?.data?.message || 'Failed to save expense';
+      setError(errorMessage);
+      toast.error(errorMessage);
       console.error('Error saving expense:', err);
     } finally {
       setLoading(false);
@@ -128,34 +195,44 @@ const ExpenseForm = () => {
 
         <div className="form-group">
           <label htmlFor="category">Category</label>
-          <select
-            id="category"
-            name="category"
-            value={formData.category}
-            onChange={handleChange}
-            required
-          >
-            <option value="">Select a category</option>
-            {categories.map((category) => (
-              <option key={category.name} value={category.name}>
-                {category.name}
-              </option>
-            ))}
-          </select>
+          <div className="category-input-group">
+            <span className="category-emoji">{formData.emoji}</span>
+            <select
+              id="category"
+              name="category"
+              value={formData.category}
+              onChange={handleChange}
+              required
+              className="category-select"
+            >
+              <option value="">Select a category</option>
+              {categories.map((category) => (
+                <option key={category.name} value={category.name}>
+                  {category.emoji} {category.name}
+                </option>
+              ))}
+              <option value="custom">➕ Add Custom Category</option>
+            </select>
+          </div>
         </div>
-
-        <div className="form-group">
-          <label htmlFor="description">Description</label>
-          <input
-            type="text"
-            id="description"
-            name="description"
-            value={formData.description}
-            onChange={handleChange}
-            required
-            placeholder="Enter a description"
-          />
-        </div>
+        
+        {formData.category === 'custom' && (
+          <div className="form-group">
+            <label htmlFor="customCategory">Custom Category Name</label>
+            <div className="category-input-group">
+              <span className="category-emoji">{formData.emoji}</span>
+              <input
+                type="text"
+                id="customCategory"
+                value={customCategory}
+                onChange={handleCustomCategoryChange}
+                required
+                placeholder="Enter category name"
+                className="custom-category-input"
+              />
+            </div>
+          </div>
+        )}
 
         <div className="form-group">
           <label htmlFor="amount">Amount</label>
