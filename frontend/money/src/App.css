@@ -8,20 +8,74 @@
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background-color: #f8f9fa;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20'%3E%3Ccircle cx='2' cy='2' r='1' fill='%23000000' fill-opacity='0.03'%3E%3C/circle%3E%3C/svg%3E");
 }
 
 :root {
-  --primary-color: #6c5ce7;
-  --primary-light: #a29bfe;
-  --secondary-color: #00b894;
-  --danger-color: #d63031;
-  --warning-color: #fdcb6e;
-  --dark-color: #2d3436;
+  --primary-color: #1976D2;
+  --primary-light: #BBDEFB;
+  --secondary-color: #512DA8;
+  --danger-color: #F44336;
+  --success-color: #4CAF50;
+  --warning-color: #FFC107;
+  --info-color: #00BCD4;
+  --dark-color: #212121;
   --light-color: #f5f6fa;
   --gray-color: #b2bec3;
   --border-radius: 8px;
-  --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --card-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
   --transition: all 0.3s ease;
+}
+
+/* Enhanced Card Styles */
+.card {
+  padding: 1.5rem;
+  background-color: white;
+  border-radius: var(--border-radius);
+  box-shadow: var(--card-shadow);
+  transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+/* Common Page Section */
+.page-section {
+  padding: 2rem;
+  margin-bottom: 2rem;
+  position: relative;
+}
+
+.page-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 5px;
+  background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+  border-radius: var(--border-radius) var(--border-radius) 0 0;
+}
+
+/* Enhanced form elements */
+input, select, textarea, button {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Decorative elements */
+.decorative-icon {
+  opacity: 0.05;
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
+  font-size: 5rem;
+  transform: rotate(-15deg);
+  pointer-events: none;
 }
 
 @keyframes logo-spin {

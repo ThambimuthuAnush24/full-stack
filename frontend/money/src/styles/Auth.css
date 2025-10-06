@@ -3,34 +3,127 @@
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background-color: #f8f9fa;
+  background-color: #f8f9fb;
   padding: 20px;
+  background-image: 
+    radial-gradient(circle at 10% 20%, rgba(var(--primary-rgb), 0.05) 0%, transparent 20%),
+    radial-gradient(circle at 90% 80%, rgba(var(--primary-rgb), 0.05) 0%, transparent 20%);
+  position: relative;
+  overflow: hidden;
+}
+
+.auth-container::before {
+  content: '';
+  position: absolute;
+  width: 200%;
+  height: 200%;
+  top: -50%;
+  left: -50%;
+  z-index: -1;
+  background: linear-gradient(0deg, rgba(var(--primary-rgb), 0.03) 0%, rgba(var(--primary-rgb), 0.01) 100%);
+  transform: rotate(-15deg);
 }
 
 .auth-form-container {
   background-color: white;
-  border-radius: var(--border-radius);
-  box-shadow: var(--box-shadow);
-  padding: 30px;
+  border-radius: 16px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+  padding: 40px;
   width: 100%;
-  max-width: 450px;
+  max-width: 480px;
+  position: relative;
+  overflow: hidden;
+  animation: fadeIn 0.8s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.auth-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 25px;
+}
+
+.logo-icon {
+  font-size: 28px;
+  margin-right: 10px;
+  background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .auth-form-container h2 {
   color: var(--primary-color);
-  text-align: center;
-  margin-bottom: 10px;
+  font-weight: 700;
+  margin: 0;
+  background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .auth-form-container h3 {
   color: var(--dark-color);
   text-align: center;
-  margin-bottom: 20px;
-  font-weight: 500;
+  margin: 15px 0 5px;
+  font-weight: 600;
+  font-size: 1.6rem;
+}
+
+.auth-subtitle {
+  text-align: center;
+  color: var(--gray-dark);
+  margin-bottom: 25px;
+  font-size: 0.95rem;
+}
+
+.auth-illustration {
+  display: none;
+}
+
+@media (min-width: 992px) {
+  .auth-container {
+    justify-content: space-between;
+    padding: 0;
+  }
+  
+  .auth-illustration {
+    display: flex;
+    width: 50%;
+    height: 100vh;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, rgba(var(--primary-rgb), 0.05) 0%, rgba(var(--accent-rgb), 0.1) 100%);
+  }
+  
+  .auth-image {
+    width: 80%;
+    max-width: 500px;
+    height: auto;
+    animation: float 6s ease-in-out infinite;
+  }
+  
+  .auth-form-container {
+    width: 50%;
+    max-width: 550px;
+    margin-right: 5%;
+    border-radius: 20px;
+  }
+}
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-15px); }
+  100% { transform: translateY(0px); }
 }
 
 .form-group {
-  margin-bottom: 20px;
+  margin-bottom: 22px;
 }
 
 .form-row {
@@ -46,51 +139,142 @@
 
 label {
   display: block;
-  margin-bottom: 5px;
+  margin-bottom: 8px;
   font-weight: 500;
   color: var(--dark-color);
+  font-size: 0.9rem;
 }
 
-input[type="text"],
-input[type="email"],
-input[type="password"],
-input[type="number"],
-input[type="date"],
-select {
+.input-with-icon {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.auth-input-icon {
+  position: absolute;
+  left: 12px;
+  color: var(--primary-color);
+  font-size: 16px;
+}
+
+.auth-input {
   width: 100%;
-  padding: 10px;
-  border: 1px solid var(--gray-color);
-  border-radius: var(--border-radius);
+  padding: 12px 12px 12px 40px;
+  border: 1px solid #e1e5eb;
+  border-radius: 10px;
   font-family: inherit;
   font-size: 1rem;
-  transition: var(--transition);
+  transition: all 0.3s;
+  background-color: #f9fafc;
 }
 
-input:focus,
-select:focus {
+.auth-input:focus {
   border-color: var(--primary-color);
   outline: none;
+  box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.15);
+  background-color: #fff;
 }
 
-.btn-primary {
+.auth-button {
   width: 100%;
-  margin-top: 10px;
-  padding: 12px;
+  margin-top: 15px;
+  padding: 14px;
   font-size: 1rem;
   justify-content: center;
+  border-radius: 10px;
+  font-weight: 600;
+  transition: all 0.3s;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+  border: none;
+}
+
+.auth-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(var(--primary-rgb), 0.3);
+}
+
+.auth-links {
+  margin-top: 25px;
 }
 
 .auth-redirect {
   text-align: center;
   margin-top: 20px;
-  font-size: 0.9rem;
+  font-size: 0.95rem;
+  color: var(--gray-dark);
 }
 
-.auth-redirect a {
+.auth-link {
   color: var(--primary-color);
-  font-weight: 500;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s;
 }
 
-.auth-redirect a:hover {
+.auth-link:hover {
   text-decoration: underline;
+}
+
+.auth-help-link {
+  margin-top: 15px;
+  text-align: center;
+}
+
+.help-link {
+  font-size: 0.85rem;
+  color: var(--gray-dark);
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.help-link:hover {
+  color: var(--primary-color);
+}
+
+.auth-decoration {
+  position: absolute;
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  z-index: -1;
+  opacity: 0.5;
+}
+
+.auth-decoration.top-right {
+  top: -50px;
+  right: -50px;
+  background: radial-gradient(circle, rgba(var(--primary-rgb), 0.15) 0%, transparent 70%);
+}
+
+.auth-decoration.bottom-left {
+  bottom: -50px;
+  left: -50px;
+  background: radial-gradient(circle, rgba(var(--accent-rgb), 0.15) 0%, transparent 70%);
+}
+
+.animated-form {
+  animation: formAppear 0.5s ease-out 0.3s backwards;
+}
+
+@keyframes formAppear {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.button-spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  border-top-color: #fff;
+  border-radius: 50%;
+  margin-right: 10px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
 }

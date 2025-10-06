@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { userService } from '../../services/api';
 import { useAuth } from '../../context/AuthContext.jsx';
-import { FaSave, FaKey } from 'react-icons/fa';
+import { FaSave, FaKey, FaUser, FaEnvelope, FaLock, FaUserEdit, FaShieldAlt } from 'react-icons/fa';
+import { ILLUSTRATIONS } from '../../assets/images';
 import '../../styles/Profile.css';
 
 const Profile = () => {
@@ -117,142 +118,213 @@ const Profile = () => {
 
   return (
     <div className="profile-container">
-      <h1>User Profile</h1>
+      <div className="profile-header page-section">
+        <div className="header-content">
+          <h1>User Profile</h1>
+          <p className="subtitle">Manage your account information and security settings</p>
+        </div>
+        <div className="profile-illustration">
+          <img src={ILLUSTRATIONS.profile} alt="Profile illustration" className="illustration-image" />
+        </div>
+      </div>
       
       <div className="profile-tabs">
         <button 
           className={`tab-btn ${activeTab === 'profile' ? 'active' : ''}`}
           onClick={() => setActiveTab('profile')}
         >
-          Profile Information
+          <FaUserEdit className="tab-icon" /> Profile Information
         </button>
         <button 
           className={`tab-btn ${activeTab === 'security' ? 'active' : ''}`}
           onClick={() => setActiveTab('security')}
         >
-          Security Settings
+          <FaShieldAlt className="tab-icon" /> Security Settings
         </button>
       </div>
       
       {error && <div className="error-message">{error}</div>}
       {success && <div className="success-message">{success}</div>}
       
-      {activeTab === 'profile' && (
-        <div className="profile-form-container">
-          <form onSubmit={handleProfileSubmit} className="profile-form">
-            <div className="form-row">
-              <div className="form-group">
-                <label htmlFor="firstName">First Name</label>
-                <input
-                  type="text"
-                  id="firstName"
-                  name="firstName"
-                  value={profileData.firstName}
-                  onChange={handleProfileChange}
-                  required
-                />
+      <div className="profile-content">
+        {activeTab === 'profile' && (
+          <div className="profile-form-container card">
+            <div className="card-header">
+              <h3>Personal Information</h3>
+              <p>Update your personal details</p>
+            </div>
+            
+            <form onSubmit={handleProfileSubmit} className="profile-form animated-form">
+              <div className="form-row">
+                <div className="form-group">
+                  <label htmlFor="firstName">First Name</label>
+                  <div className="input-with-icon">
+                    <FaUser className="input-icon" />
+                    <input
+                      type="text"
+                      id="firstName"
+                      name="firstName"
+                      value={profileData.firstName}
+                      onChange={handleProfileChange}
+                      className="styled-input"
+                      required
+                    />
+                  </div>
+                </div>
+                
+                <div className="form-group">
+                  <label htmlFor="lastName">Last Name</label>
+                  <div className="input-with-icon">
+                    <FaUser className="input-icon" />
+                    <input
+                      type="text"
+                      id="lastName"
+                      name="lastName"
+                      value={profileData.lastName}
+                      onChange={handleProfileChange}
+                      className="styled-input"
+                      required
+                    />
+                  </div>
+                </div>
               </div>
               
               <div className="form-group">
-                <label htmlFor="lastName">Last Name</label>
-                <input
-                  type="text"
-                  id="lastName"
-                  name="lastName"
-                  value={profileData.lastName}
-                  onChange={handleProfileChange}
-                  required
-                />
+                <label htmlFor="email">Email</label>
+                <div className="input-with-icon">
+                  <FaEnvelope className="input-icon" />
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    value={profileData.email}
+                    onChange={handleProfileChange}
+                    className="styled-input"
+                    required
+                  />
+                </div>
               </div>
+              
+              <div className="form-group">
+                <label htmlFor="username">Username</label>
+                <div className="input-with-icon">
+                  <FaUser className="input-icon" />
+                  <input
+                    type="text"
+                    id="username"
+                    name="username"
+                    value={profileData.username}
+                    disabled
+                    className="styled-input disabled"
+                  />
+                </div>
+                <span className="help-text">Username cannot be changed</span>
+              </div>
+              
+              <button 
+                type="submit" 
+                className="btn-primary animated-button"
+                disabled={loading}
+              >
+                {loading ? (
+                  <>
+                    <span className="button-spinner"></span> Saving...
+                  </>
+                ) : (
+                  <>
+                    <FaSave /> Save Changes
+                  </>
+                )}
+              </button>
+            </form>
+          </div>
+        )}
+        
+        {activeTab === 'security' && (
+          <div className="profile-form-container card">
+            <div className="card-header">
+              <h3>Password</h3>
+              <p>Update your password to keep your account secure</p>
             </div>
             
-            <div className="form-group">
-              <label htmlFor="email">Email</label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                value={profileData.email}
-                onChange={handleProfileChange}
-                required
-              />
-            </div>
-            
-            <div className="form-group">
-              <label htmlFor="username">Username</label>
-              <input
-                type="text"
-                id="username"
-                name="username"
-                value={profileData.username}
-                disabled
-                className="disabled"
-              />
-              <span className="help-text">Username cannot be changed</span>
-            </div>
-            
-            <button 
-              type="submit" 
-              className="btn-primary"
-              disabled={loading}
-            >
-              <FaSave /> {loading ? 'Saving...' : 'Save Changes'}
-            </button>
-          </form>
+            <form onSubmit={handlePasswordSubmit} className="profile-form animated-form">
+              <div className="form-group">
+                <label htmlFor="currentPassword">Current Password</label>
+                <div className="input-with-icon">
+                  <FaLock className="input-icon" />
+                  <input
+                    type="password"
+                    id="currentPassword"
+                    name="currentPassword"
+                    value={passwordData.currentPassword}
+                    onChange={handlePasswordChange}
+                    className="styled-input"
+                    required
+                  />
+                </div>
+              </div>
+              
+              <div className="form-group">
+                <label htmlFor="newPassword">New Password</label>
+                <div className="input-with-icon">
+                  <FaLock className="input-icon" />
+                  <input
+                    type="password"
+                    id="newPassword"
+                    name="newPassword"
+                    value={passwordData.newPassword}
+                    onChange={handlePasswordChange}
+                    className="styled-input"
+                    required
+                    minLength="6"
+                  />
+                </div>
+              </div>
+              
+              <div className="form-group">
+                <label htmlFor="confirmPassword">Confirm New Password</label>
+                <div className="input-with-icon">
+                  <FaLock className="input-icon" />
+                  <input
+                    type="password"
+                    id="confirmPassword"
+                    name="confirmPassword"
+                    value={passwordData.confirmPassword}
+                    onChange={handlePasswordChange}
+                    className="styled-input"
+                    required
+                    minLength="6"
+                  />
+                </div>
+              </div>
+              
+              <button 
+                type="submit" 
+                className="btn-primary animated-button"
+                disabled={loading}
+              >
+                {loading ? (
+                  <>
+                    <span className="button-spinner"></span> Changing...
+                  </>
+                ) : (
+                  <>
+                    <FaKey /> Change Password
+                  </>
+                )}
+              </button>
+            </form>
+          </div>
+        )}
+        
+        <div className="profile-tip">
+          <div className="tip-icon">💡</div>
+          <div className="tip-content">
+            <h4>Security Tip</h4>
+            <p>For better security, use a strong password with a mix of letters, numbers, and symbols.</p>
+          </div>
         </div>
-      )}
-      
-      {activeTab === 'security' && (
-        <div className="profile-form-container">
-          <form onSubmit={handlePasswordSubmit} className="profile-form">
-            <div className="form-group">
-              <label htmlFor="currentPassword">Current Password</label>
-              <input
-                type="password"
-                id="currentPassword"
-                name="currentPassword"
-                value={passwordData.currentPassword}
-                onChange={handlePasswordChange}
-                required
-              />
-            </div>
-            
-            <div className="form-group">
-              <label htmlFor="newPassword">New Password</label>
-              <input
-                type="password"
-                id="newPassword"
-                name="newPassword"
-                value={passwordData.newPassword}
-                onChange={handlePasswordChange}
-                required
-                minLength="6"
-              />
-            </div>
-            
-            <div className="form-group">
-              <label htmlFor="confirmPassword">Confirm New Password</label>
-              <input
-                type="password"
-                id="confirmPassword"
-                name="confirmPassword"
-                value={passwordData.confirmPassword}
-                onChange={handlePasswordChange}
-                required
-                minLength="6"
-              />
-            </div>
-            
-            <button 
-              type="submit" 
-              className="btn-primary"
-              disabled={loading}
-            >
-              <FaKey /> {loading ? 'Changing...' : 'Change Password'}
-            </button>
-          </form>
-        </div>
-      )}
+      </div>
     </div>
   );
 };

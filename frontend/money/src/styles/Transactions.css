@@ -1,60 +1,126 @@
 .transactions-container {
   padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .transactions-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 30px;
+  position: relative;
+  padding-bottom: 20px;
+  border-bottom: 1px solid rgba(var(--primary-rgb), 0.1);
 }
 
 .transactions-header h1 {
-  margin: 0;
+  margin: 0 0 10px 0;
   color: var(--dark-color);
+  font-size: 2.2rem;
+}
+
+.header-content .subtitle {
+  color: var(--gray-dark);
+  margin: 0;
+  font-size: 1rem;
 }
 
 .filter-section {
   background-color: white;
-  border-radius: var(--border-radius);
-  box-shadow: var(--box-shadow);
-  padding: 15px;
-  margin-bottom: 20px;
+  border-radius: 16px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  padding: 20px;
+  margin-bottom: 25px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  align-items: center;
+}
+
+.filter-section select, 
+.filter-section input {
+  padding: 10px 15px;
+  border: 1px solid #e1e5eb;
+  border-radius: 10px;
+  background-color: #f9fafc;
+  font-family: inherit;
+  transition: all 0.3s;
+}
+
+.filter-section select:focus, 
+.filter-section input:focus {
+  border-color: var(--primary-color);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.15);
+  background-color: #fff;
 }
 
 .summary-total {
-  background-color: white;
-  border-radius: var(--border-radius);
-  box-shadow: var(--box-shadow);
-  padding: 15px;
-  margin-bottom: 20px;
+  background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+  color: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 15px rgba(var(--primary-rgb), 0.2);
+  padding: 20px 25px;
+  margin-bottom: 25px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .summary-total h3 {
   margin: 0;
-  color: var(--dark-color);
-  font-size: 1.2rem;
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+
+.summary-total .amount {
+  font-size: 1.8rem;
+  font-weight: 700;
 }
 
 .transactions-table {
   background-color: white;
-  border-radius: var(--border-radius);
-  box-shadow: var(--box-shadow);
-  padding: 20px;
-  overflow-x: auto;
+  border-radius: 16px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  padding: 0;
+  overflow: hidden;
+}
+
+.transactions-table-header {
+  padding: 20px 25px;
+  background: linear-gradient(to right, rgba(var(--primary-rgb), 0.05), rgba(var(--accent-rgb), 0.05));
+  border-bottom: 1px solid rgba(var(--primary-rgb), 0.1);
+}
+
+.transactions-table-header h3 {
+  margin: 0;
+  color: var(--dark-color);
 }
 
 .no-data {
   background-color: white;
-  border-radius: var(--border-radius);
-  box-shadow: var(--box-shadow);
-  padding: 40px 20px;
+  border-radius: 16px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  padding: 60px 20px;
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+
+.no-data-icon {
+  font-size: 48px;
+  color: var(--gray-color);
+  opacity: 0.5;
 }
 
 .no-data p {
   margin-bottom: 20px;
-  color: var(--gray-color);
+  color: var(--gray-dark);
+  font-size: 1.1rem;
 }
 
 /* Table styles */
@@ -64,11 +130,11 @@ table {
 }
 
 thead {
-  background-color: rgba(0, 0, 0, 0.02);
+  background-color: rgba(var(--primary-rgb), 0.03);
 }
 
 th, td {
-  padding: 12px 15px;
+  padding: 15px 20px;
   text-align: left;
   border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 }
@@ -76,18 +142,47 @@ th, td {
 th {
   font-weight: 600;
   color: var(--dark-color);
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 tbody tr {
-  transition: var(--transition);
+  transition: all 0.2s;
 }
 
 tbody tr:hover {
-  background-color: rgba(0, 0, 0, 0.02);
+  background-color: rgba(var(--primary-rgb), 0.03);
+}
+
+.transaction-emoji {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background-color: rgba(var(--primary-rgb), 0.1);
+  border-radius: 50%;
+  margin-right: 10px;
+  font-size: 1.2rem;
+}
+
+.transaction-category {
+  display: flex;
+  align-items: center;
 }
 
 .amount {
   font-weight: 600;
+  font-size: 1.05rem;
+}
+
+.amount.income {
+  color: var(--success-color);
+}
+
+.amount.expense {
+  color: var(--danger-color);
 }
 
 .actions {

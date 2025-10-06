@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { incomeService, categoryService } from '../../services/api';
-import { FaSave, FaTimes } from 'react-icons/fa';
+import { FaSave, FaTimes, FaMoneyBillWave, FaPlusCircle } from 'react-icons/fa';
 import '../../styles/TransactionForm.css';
 import { toast } from 'react-toastify';
 import { getCategoryEmoji } from '../../utils/categoryUtils';
+import { ILLUSTRATIONS } from '../../assets/images';
 
 const IncomeForm = () => {
   const { id } = useParams();
@@ -169,26 +170,40 @@ const IncomeForm = () => {
 
   return (
     <div className="transaction-form-container">
-      <div className="form-header">
-        <h1>{isEditing ? 'Edit Income' : 'Add Income'}</h1>
+      <div className="form-header page-section">
+        <div className="header-content">
+          <h1>{isEditing ? 'Edit Income' : 'Add New Income'}</h1>
+          <p className="subtitle">Track your earnings and keep your finances organized</p>
+        </div>
         <Link to="/income" className="btn-secondary">
           <FaTimes /> Cancel
         </Link>
+        <div className="form-illustration">
+          <img src={ILLUSTRATIONS.income} alt="Income illustration" className="illustration-image" />
+        </div>
       </div>
 
       {error && <div className="error-message">{error}</div>}
 
-      <form onSubmit={handleSubmit} className="transaction-form">
+      <form onSubmit={handleSubmit} className="transaction-form card">
+        <div className="form-icon">
+          <FaMoneyBillWave className="form-main-icon" />
+        </div>
+        
         <div className="form-group">
           <label htmlFor="date">Date</label>
-          <input
-            type="date"
-            id="date"
-            name="date"
-            value={formData.date}
-            onChange={handleChange}
-            required
-          />
+          <div className="input-with-icon">
+            <span className="input-icon">📅</span>
+            <input
+              type="date"
+              id="date"
+              name="date"
+              value={formData.date}
+              onChange={handleChange}
+              required
+              className="styled-input"
+            />
+          </div>
         </div>
 
         <div className="form-group">
@@ -234,27 +249,45 @@ const IncomeForm = () => {
 
         <div className="form-group">
           <label htmlFor="amount">Amount</label>
-          <input
-            type="number"
-            id="amount"
-            name="amount"
-            value={formData.amount}
-            onChange={handleChange}
-            required
-            min="0.01"
-            step="0.01"
-            placeholder="Enter amount"
-          />
+          <div className="input-with-icon">
+            <span className="input-icon">💵</span>
+            <input
+              type="number"
+              id="amount"
+              name="amount"
+              value={formData.amount}
+              onChange={handleChange}
+              required
+              min="0.01"
+              step="0.01"
+              placeholder="Enter amount"
+              className="styled-input"
+            />
+          </div>
         </div>
 
         <div className="form-actions">
           <button 
             type="submit" 
-            className="btn-primary"
+            className="btn-primary animated-button"
             disabled={loading}
           >
-            <FaSave /> {loading ? 'Saving...' : 'Save Income'}
+            {loading ? (
+              <>
+                <span className="button-spinner"></span> Saving...
+              </>
+            ) : (
+              <>
+                <FaSave /> Save Income
+              </>
+            )}
           </button>
+        </div>
+        
+        <div className="form-footer">
+          <p className="hint-text">
+            <FaPlusCircle className="hint-icon" /> Your income will appear in your financial dashboard
+          </p>
         </div>
       </form>
     </div>

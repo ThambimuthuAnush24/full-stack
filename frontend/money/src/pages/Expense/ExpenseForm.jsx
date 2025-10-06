@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { expenseService, categoryService } from '../../services/api';
-import { FaSave, FaTimes } from 'react-icons/fa';
+import { FaSave, FaTimes, FaReceipt, FaPlusCircle } from 'react-icons/fa';
 import '../../styles/TransactionForm.css';
 import { toast } from 'react-toastify';
 import { getCategoryEmoji } from '../../utils/categoryUtils';
+import { ILLUSTRATIONS } from '../../assets/images';
 
 const ExpenseForm = () => {
   const { id } = useParams();
@@ -171,11 +172,17 @@ const ExpenseForm = () => {
 
   return (
     <div className="transaction-form-container">
-      <div className="form-header">
-        <h1>{isEditing ? 'Edit Expense' : 'Add Expense'}</h1>
+      <div className="form-header page-section">
+        <div className="header-content">
+          <h1>{isEditing ? 'Edit Expense' : 'Add New Expense'}</h1>
+          <p className="subtitle">Track your spending and manage your budget effectively</p>
+        </div>
         <Link to="/expense" className="btn-secondary">
           <FaTimes /> Cancel
         </Link>
+        <div className="form-illustration">
+          <img src={ILLUSTRATIONS.expense} alt="Expense illustration" className="illustration-image" />
+        </div>
       </div>
 
       {error && <div className="error-message">{error}</div>}
@@ -183,27 +190,31 @@ const ExpenseForm = () => {
       <form onSubmit={handleSubmit} className="transaction-form">
         <div className="form-group">
           <label htmlFor="date">Date</label>
-          <input
-            type="date"
-            id="date"
-            name="date"
-            value={formData.date}
-            onChange={handleChange}
-            required
-          />
+          <div className="input-with-icon">
+            <span className="input-icon">📅</span>
+            <input
+              type="date"
+              id="date"
+              name="date"
+              value={formData.date}
+              onChange={handleChange}
+              required
+              className="styled-input"
+            />
+          </div>
         </div>
 
         <div className="form-group">
           <label htmlFor="category">Category</label>
-          <div className="category-input-group">
-            <span className="category-emoji">{formData.emoji}</span>
+          <div className="input-with-icon">
+            <span className="input-icon">{formData.emoji}</span>
             <select
               id="category"
               name="category"
               value={formData.category}
               onChange={handleChange}
               required
-              className="category-select"
+              className="styled-input category-select"
             >
               <option value="">Select a category</option>
               {categories.map((category) => (
@@ -211,7 +222,7 @@ const ExpenseForm = () => {
                   {category.emoji} {category.name}
                 </option>
               ))}
-              <option value="custom">➕ Add Custom Category</option>
+              <option value="custom"><FaPlusCircle /> Add Custom Category</option>
             </select>
           </div>
         </div>
@@ -219,8 +230,8 @@ const ExpenseForm = () => {
         {formData.category === 'custom' && (
           <div className="form-group">
             <label htmlFor="customCategory">Custom Category Name</label>
-            <div className="category-input-group">
-              <span className="category-emoji">{formData.emoji}</span>
+            <div className="input-with-icon">
+              <span className="input-icon">{formData.emoji}</span>
               <input
                 type="text"
                 id="customCategory"
@@ -228,7 +239,7 @@ const ExpenseForm = () => {
                 onChange={handleCustomCategoryChange}
                 required
                 placeholder="Enter category name"
-                className="custom-category-input"
+                className="styled-input custom-category-input"
               />
             </div>
           </div>
@@ -236,29 +247,48 @@ const ExpenseForm = () => {
 
         <div className="form-group">
           <label htmlFor="amount">Amount</label>
-          <input
-            type="number"
-            id="amount"
-            name="amount"
-            value={formData.amount}
-            onChange={handleChange}
-            required
-            min="0.01"
-            step="0.01"
-            placeholder="Enter amount"
-          />
+          <div className="input-with-icon">
+            <span className="input-icon">💵</span>
+            <input
+              type="number"
+              id="amount"
+              name="amount"
+              value={formData.amount}
+              onChange={handleChange}
+              required
+              min="0.01"
+              step="0.01"
+              placeholder="Enter amount"
+              className="styled-input"
+            />
+          </div>
         </div>
 
         <div className="form-actions">
           <button 
             type="submit" 
-            className="btn-primary"
+            className="btn-primary animated-button"
             disabled={loading}
           >
-            <FaSave /> {loading ? 'Saving...' : 'Save Expense'}
+            {loading ? (
+              <>
+                <span className="button-spinner"></span> Saving...
+              </>
+            ) : (
+              <>
+                <FaSave /> Save Expense
+              </>
+            )}
           </button>
         </div>
       </form>
+
+      <div className="form-footer">
+        <div className="tip-box">
+          <FaReceipt className="tip-icon" />
+          <p>Tip: Categorizing expenses helps identify spending patterns and areas where you can save.</p>
+        </div>
+      </div>
     </div>
   );
 };

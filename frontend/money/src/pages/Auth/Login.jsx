@@ -3,6 +3,8 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext.jsx';
 import { toast } from 'react-toastify';
 import '../../styles/Auth.css';
+import { FaUser, FaLock, FaSignInAlt } from 'react-icons/fa';
+import { ILLUSTRATIONS } from '../../assets/images';
 
 const Login = () => {
   const [credentials, setCredentials] = useState({
@@ -140,57 +142,85 @@ const Login = () => {
 
   return (
     <div className="auth-container">
+      <div className="auth-illustration">
+        <img src={ILLUSTRATIONS.login} alt="Login illustration" className="auth-image" />
+      </div>
       <div className="auth-form-container">
-        <h2>Money Manager</h2>
-        <h3>Sign In</h3>
+        <div className="auth-logo">
+          <div className="logo-icon">💰</div>
+          <h2>Money Manager</h2>
+        </div>
+        <h3>Welcome Back!</h3>
+        <p className="auth-subtitle">Sign in to continue managing your finances</p>
         
         {(error || loginError) && <div className="error-message">{error || loginError}</div>}
         
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className="animated-form">
           <div className="form-group">
             <label htmlFor="username">Username</label>
-            <input
-              type="text"
-              id="username"
-              name="username"
-              value={credentials.username}
-              onChange={handleChange}
-              required
-              placeholder="Enter your username"
-            />
+            <div className="input-with-icon">
+              <FaUser className="auth-input-icon" />
+              <input
+                type="text"
+                id="username"
+                name="username"
+                value={credentials.username}
+                onChange={handleChange}
+                required
+                placeholder="Enter your username"
+                className="auth-input"
+              />
+            </div>
           </div>
           
           <div className="form-group">
             <label htmlFor="password">Password</label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              value={credentials.password}
-              onChange={handleChange}
-              required
-              placeholder="Enter your password"
-            />
+            <div className="input-with-icon">
+              <FaLock className="auth-input-icon" />
+              <input
+                type="password"
+                id="password"
+                name="password"
+                value={credentials.password}
+                onChange={handleChange}
+                required
+                placeholder="Enter your password"
+                className="auth-input"
+              />
+            </div>
           </div>
           
           <button 
             type="submit" 
-            className="btn-primary"
+            className="btn-primary auth-button animated-button"
             disabled={isLoading}
           >
-            {isLoading ? 'Signing in...' : 'Sign In'}
+            {isLoading ? (
+              <>
+                <span className="button-spinner"></span> Signing in...
+              </>
+            ) : (
+              <>
+                <FaSignInAlt /> Sign In
+              </>
+            )}
           </button>
         </form>
         
-        <p className="auth-redirect">
-          Don't have an account? <Link to="/register">Register</Link>
-        </p>
-        
-        <div style={{ marginTop: '15px', fontSize: '14px', textAlign: 'center' }}>
-          <Link to="/api-test" style={{ color: '#6c63ff', textDecoration: 'underline' }}>
-            Having trouble logging in? Try our API test page
-          </Link>
+        <div className="auth-links">
+          <p className="auth-redirect">
+            Don't have an account? <Link to="/register" className="auth-link">Register</Link>
+          </p>
+          
+          <div className="auth-help-link">
+            <Link to="/api-test" className="help-link">
+              Having trouble logging in? Try our API test page
+            </Link>
+          </div>
         </div>
+        
+        <div className="auth-decoration top-right"></div>
+        <div className="auth-decoration bottom-left"></div>
       </div>
     </div>
   );
