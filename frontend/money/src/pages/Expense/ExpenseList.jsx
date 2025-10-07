@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { expenseService } from '../../services/api';
 import DateRangePicker from '../../components/ui/DateRangePicker';
-import { FaPlus, FaEdit, FaTrash } from 'react-icons/fa';
+import { FaPlus, FaEdit, FaTrash, FaReceipt, FaFilter, FaChartBar } from 'react-icons/fa';
 import '../../styles/Transactions.css';
+import { ILLUSTRATIONS } from '../../assets/images';
 
 const ExpenseList = () => {
   const [expenses, setExpenses] = useState([]);
@@ -74,19 +75,30 @@ const ExpenseList = () => {
   };
 
   if (loading) {
-    return <div className="loading-container">Loading expense data...</div>;
+    return (
+      <div className="loading-container">
+        <div className="loading-spinner"></div>
+        <p>Loading expense data...</p>
+      </div>
+    );
   }
 
   return (
     <div className="transactions-container">
       <div className="transactions-header">
-        <h1>Expenses</h1>
+        <div className="header-with-icon">
+          <FaReceipt className="header-icon" />
+          <h1>Expenses</h1>
+        </div>
         <Link to="/expense/add" className="btn-primary">
           <FaPlus /> Add Expense
         </Link>
       </div>
 
       <div className="filter-section">
+        <div className="filter-label">
+          <FaFilter /> <span>Filter by date:</span>
+        </div>
         <DateRangePicker 
           dateRange={dateRange} 
           onChange={handleDateRangeChange} 
@@ -95,51 +107,65 @@ const ExpenseList = () => {
 
       {error && <div className="error-message">{error}</div>}
 
-      <div className="summary-total">
-        <h3>Total Expenses: {formatCurrency(calculateTotal())}</h3>
+      <div className="summary-card expense-summary">
+        <div className="summary-icon">
+          <FaChartBar />
+        </div>
+        <div className="summary-content">
+          <span className="summary-label">Total Expenses</span>
+          <h3 className="summary-amount">{formatCurrency(calculateTotal())}</h3>
+        </div>
       </div>
 
       {expenses.length === 0 ? (
         <div className="no-data">
+          <div className="empty-state-illustration">
+            <img src={ILLUSTRATIONS.expense} alt="No expense data" />
+          </div>
           <p>No expense records found for the selected period.</p>
-          <Link to="/expense/add" className="btn-primary">
-            Add Your First Expense
+          <Link to="/expense/add" className="btn-primary btn-add-first">
+            <FaPlus /> Add Your First Expense
           </Link>
         </div>
       ) : (
         <div className="transactions-table">
-          <table>
-            <thead>
-              <tr>
-                <th>Date</th>
-                <th>Category</th>
-                <th>Description</th>
-                <th>Amount</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {expenses.map((expense) => (
-                <tr key={expense.id}>
-                  <td>{formatDate(expense.date)}</td>
-                  <td>{expense.category}</td>
-                  <td>{expense.description}</td>
-                  <td className="amount">{formatCurrency(expense.amount)}</td>
-                  <td className="actions">
-                    <Link to={`/expense/edit/${expense.id}`} className="edit-btn">
-                      <FaEdit />
-                    </Link>
-                    <button
-                      className="delete-btn"
-                      onClick={() => handleDelete(expense.id)}
-                    >
-                      <FaTrash />
-                    </button>
-                  </td>
+          <div className="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Category</th>
+                  <th>Description</th>
+                  <th>Amount</th>
+                  <th>Actions</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {expenses.map((expense) => (
+                  <tr key={expense.id} className="transaction-row">
+                    <td className="date-cell">{formatDate(expense.date)}</td>
+                    <td className="category-cell">
+                      <div className="category-tag expense-category">{expense.category}</div>
+                    </td>
+                    <td className="description-cell">{expense.description}</td>
+                    <td className="amount amount-negative">{formatCurrency(expense.amount)}</td>
+                    <td className="actions">
+                      <Link to={`/expense/edit/${expense.id}`} className="edit-btn" title="Edit">
+                        <FaEdit />
+                      </Link>
+                      <button
+                        className="delete-btn"
+                        onClick={() => handleDelete(expense.id)}
+                        title="Delete"
+                      >
+                        <FaTrash />
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
     </div>

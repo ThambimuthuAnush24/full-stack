@@ -150,7 +150,6 @@ const Login = () => {
           <div className="logo-icon">💰</div>
           <h2>Money Manager</h2>
         </div>
-        <h3>Welcome Back!</h3>
         <p className="auth-subtitle">Sign in to continue managing your finances</p>
         
         {(error || loginError) && <div className="error-message">{error || loginError}</div>}
