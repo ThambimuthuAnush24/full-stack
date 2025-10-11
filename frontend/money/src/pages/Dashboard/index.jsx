@@ -64,7 +64,7 @@ const Dashboard = () => {
     <div className="dashboard-container">
       <div className="dashboard-header page-section">
         <div className="header-content">
-          <h1>Financial Dashboard</h1>
+          <h1>Your Financial Dashboard</h1>
           <p className="subtitle">Track, analyze and manage your finances in one place</p>
         </div>
         <DateRangePicker 

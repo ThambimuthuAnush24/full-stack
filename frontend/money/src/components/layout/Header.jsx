@@ -35,7 +35,7 @@ const Header = () => {
   return (
     <header className="app-header">
       <div className="header-title">
-        <h2>Money Manager</h2>
+        {/* Money Manager heading removed to prevent duplication */}
       </div>
       
       <div className="header-actions">

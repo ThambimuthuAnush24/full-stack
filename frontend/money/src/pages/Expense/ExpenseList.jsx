@@ -26,11 +26,12 @@ const ExpenseList = () => {
         startDate: dateRange.startDate.toISOString().split('T')[0],
         endDate: dateRange.endDate.toISOString().split('T')[0]
       });
-      setExpenses(response.data);
+      setExpenses(response.data || []);
       setError(null);
     } catch (err) {
-      setError('Failed to load expense data. Please try again later.');
       console.error('Error fetching expense data:', err);
+      setExpenses([]);
+      setError('Failed to load expense data. Please try again later.');
     } finally {
       setLoading(false);
     }
@@ -84,7 +85,7 @@ const ExpenseList = () => {
   }
 
   return (
-    <div className="transactions-container">
+    <div className="transactions-container expense-page">
       <div className="transactions-header">
         <div className="header-with-icon">
           <FaReceipt className="header-icon" />

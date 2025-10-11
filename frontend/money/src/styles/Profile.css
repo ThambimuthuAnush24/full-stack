@@ -2,6 +2,12 @@
   padding: 20px;
   max-width: 900px;
   margin: 0 auto;
+  min-height: calc(100vh - 80px);
+  position: relative;
+  z-index: 1;
+  background-image: var(--profile-bg);
+  background-size: 100% 100%;
+  background-attachment: fixed;
 }
 
 .profile-header {

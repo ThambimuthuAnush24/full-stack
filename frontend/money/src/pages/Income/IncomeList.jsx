@@ -26,11 +26,12 @@ const IncomeList = () => {
         startDate: dateRange.startDate.toISOString().split('T')[0],
         endDate: dateRange.endDate.toISOString().split('T')[0]
       });
-      setIncomes(response.data);
+      setIncomes(response.data || []);
       setError(null);
     } catch (err) {
-      setError('Failed to load income data. Please try again later.');
       console.error('Error fetching income data:', err);
+      setIncomes([]);
+      setError('Failed to load income data. Please try again later.');
     } finally {
       setLoading(false);
     }
@@ -84,7 +85,7 @@ const IncomeList = () => {
   }
 
   return (
-    <div className="transactions-container">
+    <div className="transactions-container income-page">
       <div className="transactions-header">
         <div className="header-with-icon">
           <FaMoneyBillWave className="header-icon" />
