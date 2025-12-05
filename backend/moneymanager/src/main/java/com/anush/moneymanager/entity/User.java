@@ -36,13 +36,8 @@ public class User {
     @Column(name = "last_name")
     private String lastName;
 
-    private String profileImage;
-
     @Enumerated(EnumType.STRING)
     private Role role = Role.ROLE_USER;
-
-    @Column(name = "notification_enabled")
-    private boolean notificationEnabled = true;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Income> incomes = new HashSet<>();
@@ -105,28 +100,12 @@ public class User {
         this.lastName = lastName;
     }
 
-    public String getProfileImage() {
-        return profileImage;
-    }
-
-    public void setProfileImage(String profileImage) {
-        this.profileImage = profileImage;
-    }
-
     public Role getRole() {
         return role;
     }
 
     public void setRole(Role role) {
         this.role = role;
-    }
-
-    public boolean isNotificationEnabled() {
-        return notificationEnabled;
-    }
-
-    public void setNotificationEnabled(boolean notificationEnabled) {
-        this.notificationEnabled = notificationEnabled;
     }
 
     public Set<Income> getIncomes() {

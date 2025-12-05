@@ -85,29 +85,4 @@ public class UserController {
         }
     }
 
-    @PutMapping("/notifications")
-    public ResponseEntity<?> updateNotificationSettings(@RequestBody Map<String, Boolean> settings,
-            Principal principal) {
-        try {
-            Boolean enabled = settings.get("enabled");
-            if (enabled == null) {
-                return ResponseEntity.badRequest().body("Notification setting 'enabled' is required");
-            }
-
-            User user = userService.findByUsername(principal.getName())
-                    .orElseThrow(() -> new RuntimeException("User not found"));
-
-            user.setNotificationEnabled(enabled);
-            User updatedUser = userService.updateUserProfile(user);
-
-            Map<String, Object> response = new HashMap<>();
-            response.put("message", "Notification settings updated successfully");
-            response.put("notificationsEnabled", updatedUser.isNotificationEnabled());
-
-            return ResponseEntity.ok(response);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body("Error updating notification settings: " + e.getMessage());
-        }
-    }
 }

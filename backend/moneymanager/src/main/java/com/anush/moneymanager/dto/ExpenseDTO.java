@@ -23,8 +23,6 @@ public class ExpenseDTO {
     @NotNull(message = "Date is required")
     private Date date;
 
-    private String emoji;
-
     // Getters and setters
     public Long getId() {
         return id;
@@ -64,13 +62,5 @@ public class ExpenseDTO {
 
     public void setDate(Date date) {
         this.date = date;
-    }
-
-    public String getEmoji() {
-        return emoji;
-    }
-
-    public void setEmoji(String emoji) {
-        this.emoji = emoji;
     }
 }

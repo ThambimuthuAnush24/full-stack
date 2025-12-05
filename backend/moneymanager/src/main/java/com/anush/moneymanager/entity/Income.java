@@ -32,8 +32,6 @@ public class Income {
     @Temporal(TemporalType.DATE)
     private Date date;
 
-    private String emoji;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
@@ -43,12 +41,11 @@ public class Income {
     }
 
     // Parameterized constructor
-    public Income(Double amount, String category, String description, Date date, String emoji, User user) {
+    public Income(Double amount, String category, String description, Date date, User user) {
         this.amount = amount;
         this.category = category;
         this.description = description;
         this.date = date;
-        this.emoji = emoji;
         this.user = user;
     }
 
@@ -93,14 +90,6 @@ public class Income {
         this.date = date;
     }
 
-    public String getEmoji() {
-        return emoji;
-    }
-
-    public void setEmoji(String emoji) {
-        this.emoji = emoji;
-    }
-
     public User getUser() {
         return user;
     }
@@ -118,7 +107,6 @@ public class Income {
                 ", category='" + category + '\'' +
                 ", description='" + description + '\'' +
                 ", date=" + date +
-                ", emoji='" + emoji + '\'' +
                 ", user=" + (user != null ? user.getId() : "null") +
                 '}';
     }

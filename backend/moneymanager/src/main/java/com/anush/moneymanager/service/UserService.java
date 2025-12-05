@@ -101,14 +101,6 @@ public class UserService {
                 userToUpdate.setEmail(user.getEmail());
             }
 
-            if (user.getProfileImage() != null) {
-                userToUpdate.setProfileImage(user.getProfileImage());
-            }
-
-            if (user.isNotificationEnabled() != userToUpdate.isNotificationEnabled()) {
-                userToUpdate.setNotificationEnabled(user.isNotificationEnabled());
-            }
-
             return userRepository.save(userToUpdate);
         } else {
             throw new RuntimeException("User not found");
