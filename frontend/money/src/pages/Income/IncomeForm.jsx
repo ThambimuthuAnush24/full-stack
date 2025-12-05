@@ -4,7 +4,6 @@ import { incomeService, categoryService } from '../../services/api';
 import { FaSave, FaTimes, FaMoneyBillWave, FaPlusCircle } from 'react-icons/fa';
 import '../../styles/TransactionForm.css';
 import { toast } from 'react-toastify';
-import { getCategoryEmoji } from '../../utils/categoryUtils';
 import { ILLUSTRATIONS } from '../../assets/images';
 
 const IncomeForm = () => {
@@ -16,7 +15,6 @@ const IncomeForm = () => {
     date: new Date().toISOString().split('T')[0],
     category: '',
     amount: '',
-    emoji: '💰', // Default emoji
   });
 
   const [categories, setCategories] = useState([]);
@@ -70,7 +68,6 @@ const IncomeForm = () => {
             date: formattedDate,
             category: income.category,
             amount: income.amount,
-            emoji: income.emoji || '💰', // Use the emoji if available, otherwise default
           });
           
           setError(null);
@@ -96,21 +93,10 @@ const IncomeForm = () => {
         [name]: value,
       });
     } else {
-      // For regular field updates, apply automatic emoji if it's the category field
-      const updates = { [name]: value };
-      
-      // Auto-assign emoji if this is a category change
-      if (name === 'category') {
-        // Find the matching category from our list
-        const categoryObj = categories.find(cat => cat.name === value);
-        if (categoryObj && categoryObj.emoji) {
-          updates.emoji = categoryObj.emoji;
-        }
-      }
-      
+      // For regular field updates
       setFormData({
         ...formData,
-        ...updates
+        [name]: value
       });
     }
   };
@@ -118,13 +104,6 @@ const IncomeForm = () => {
   const handleCustomCategoryChange = (e) => {
     const value = e.target.value;
     setCustomCategory(value);
-    
-    // Auto-update the emoji based on the custom category text
-    const suggestedEmoji = getCategoryEmoji(value, 'income');
-    setFormData({
-      ...formData,
-      emoji: suggestedEmoji
-    });
   };
 
   const handleSubmit = async (e) => {
