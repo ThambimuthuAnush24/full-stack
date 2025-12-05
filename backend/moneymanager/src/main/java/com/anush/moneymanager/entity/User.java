@@ -36,20 +36,11 @@ public class User {
     @Column(name = "last_name")
     private String lastName;
 
-    @Enumerated(EnumType.STRING)
-    private Role role = Role.ROLE_USER;
-
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Income> incomes = new HashSet<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Expense> expenses = new HashSet<>();
-
-    // Enum for user roles
-    public enum Role {
-        ROLE_USER,
-        ROLE_ADMIN
-    }
 
     // getters and setters
     public Long getId() {
@@ -98,14 +89,6 @@ public class User {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
-    }
-
-    public Role getRole() {
-        return role;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
     }
 
     public Set<Income> getIncomes() {
