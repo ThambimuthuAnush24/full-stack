@@ -38,7 +38,6 @@ public class ExpenseController {
             expense.setCategory(expenseDTO.getCategory());
             expense.setDescription(expenseDTO.getDescription());
             expense.setDate(expenseDTO.getDate());
-            expense.setEmoji(expenseDTO.getEmoji());
             expense.setUser(userOptional.get());
 
             expenseRepository.save(expense);
@@ -92,7 +91,6 @@ public class ExpenseController {
             expense.setCategory(expenseDTO.getCategory());
             expense.setDescription(expenseDTO.getDescription());
             expense.setDate(expenseDTO.getDate());
-            expense.setEmoji(expenseDTO.getEmoji());
 
             expenseRepository.save(expense);
             return ResponseEntity.ok("Expense updated successfully");

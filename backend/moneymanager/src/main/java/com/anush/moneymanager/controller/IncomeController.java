@@ -38,7 +38,6 @@ public class IncomeController {
             income.setCategory(incomeDTO.getCategory());
             income.setDescription(incomeDTO.getDescription());
             income.setDate(incomeDTO.getDate());
-            income.setEmoji(incomeDTO.getEmoji());
             income.setUser(userOptional.get());
 
             incomeRepository.save(income);
@@ -92,7 +91,6 @@ public class IncomeController {
             income.setCategory(incomeDTO.getCategory());
             income.setDescription(incomeDTO.getDescription());
             income.setDate(incomeDTO.getDate());
-            income.setEmoji(incomeDTO.getEmoji());
 
             incomeRepository.save(income);
             return ResponseEntity.ok("Income updated successfully");

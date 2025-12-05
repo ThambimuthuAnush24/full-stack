@@ -140,7 +140,6 @@ public class DashboardController {
             transaction.put("category", income.getCategory());
             transaction.put("description", income.getDescription());
             transaction.put("date", income.getDate());
-            transaction.put("emoji", income.getEmoji());
             transactions.add(transaction);
         }
 
@@ -153,7 +152,6 @@ public class DashboardController {
             transaction.put("category", expense.getCategory());
             transaction.put("description", expense.getDescription());
             transaction.put("date", expense.getDate());
-            transaction.put("emoji", expense.getEmoji());
             transactions.add(transaction);
         }
 
@@ -195,7 +193,6 @@ public class DashboardController {
             transaction.put("category", income.getCategory());
             transaction.put("description", income.getDescription());
             transaction.put("date", income.getDate());
-            transaction.put("emoji", income.getEmoji());
             transactions.add(transaction);
         }
 
@@ -208,7 +205,6 @@ public class DashboardController {
             transaction.put("category", expense.getCategory());
             transaction.put("description", expense.getDescription());
             transaction.put("date", expense.getDate());
-            transaction.put("emoji", expense.getEmoji());
             transactions.add(transaction);
         }
 
